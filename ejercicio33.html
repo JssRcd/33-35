@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 33: Verificador de Anagramas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 100%;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #667eea;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #764ba2;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.8em;
+        }
+
+        .description {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            background-color: #f8f9ff;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: 600;
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .result.si {
+            background-color: #d4edda;
+            color: #155724;
+            border: 2px solid #28a745;
+        }
+
+        .result.no {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+
+        .info-box {
+            background-color: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-top: 30px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Volver al inicio</a>
+
+        <h1>Ejercicio 33: Anagramas</h1>
+        <p class="description">Verifica si dos palabras son anagramas entre sí. Dos palabras son anagramas si contienen exactamente las mismas letras.</p>
+
+        <form id="formulario">
+            <div class="form-group">
+                <label for="palabra1">Primera palabra:</label>
+                <input type="text" id="palabra1" placeholder="Ejemplo: listen" required>
+            </div>
+
+            <div class="form-group">
+                <label for="palabra2">Segunda palabra:</label>
+                <input type="text" id="palabra2" placeholder="Ejemplo: silent" required>
+            </div>
+
+            <button type="submit">Verificar Anagrama</button>
+        </form>
+
+        <div class="result" id="resultado"></div>
+
+        <div class="info-box">
+            <strong>¿Cómo funciona?</strong><br>
+            El programa convierte ambas palabras en arrays de letras, las ordena alfabéticamente y compara si son iguales. Si coinciden, son anagramas.
+        </div>
+    </div>
+
+    <script>
+        // Función para verificar si dos palabras son anagramas
+        function sonAnagramas(palabra1, palabra2) {
+            // Convertir a minúsculas (ya vienen así) y eliminar espacios
+            palabra1 = palabra1.trim().toLowerCase();
+            palabra2 = palabra2.trim().toLowerCase();
+
+            // Si tienen diferente longitud, no pueden ser anagramas
+            if (palabra1.length !== palabra2.length) {
+                return false;
+            }
+
+            // Convertir palabras en arrays, ordenar alfabéticamente y convertir a string
+            // Ejemplo: "listen" → ['l','i','s','t','e','n'] → ['e','i','l','n','s','t'] → "eilnst"
+            const sorted1 = palabra1.split('').sort().join('');
+            const sorted2 = palabra2.split('').sort().join('');
+
+            // Comparar si los strings ordenados son iguales
+            return sorted1 === sorted2;
+        }
+
+        // Obtener elementos del DOM
+        const formulario = document.getElementById('formulario');
+        const palabra1Input = document.getElementById('palabra1');
+        const palabra2Input = document.getElementById('palabra2');
+        const resultadoDiv = document.getElementById('resultado');
+
+        // Escuchar el envío del formulario
+        formulario.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Obtener valores del formulario
+            const palabra1 = palabra1Input.value;
+            const palabra2 = palabra2Input.value;
+
+            // Verificar si son anagramas
+            const esAnagrama = sonAnagramas(palabra1, palabra2);
+
+            // Mostrar resultado
+            resultadoDiv.style.display = 'block';
+            if (esAnagrama) {
+                resultadoDiv.textContent = '✓ Sí, son anagramas';
+                resultadoDiv.className = 'result si';
+            } else {
+                resultadoDiv.textContent = '✗ No, no son anagramas';
+                resultadoDiv.className = 'result no';
+            }
+        });
+    </script>
+</body>
+</html>

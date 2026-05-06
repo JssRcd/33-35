@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 34: Cambio de Divisas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 100%;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #667eea;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #764ba2;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.8em;
+        }
+
+        .description {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            background-color: #f8f9ff;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border: 2px solid #66bb6a;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .result-label {
+            color: #2e7d32;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+        }
+
+        .result-value {
+            color: #1b5e20;
+            font-size: 2.2em;
+            font-weight: bold;
+        }
+
+        .info-box {
+            background-color: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-top: 30px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Volver al inicio</a>
+
+        <h1>Ejercicio 34: Cambio de Divisas</h1>
+        <p class="description">Calcula la conversión de una cantidad usando una tasa de cambio. Multiplica la cantidad por la tasa para obtener el resultado.</p>
+
+        <form id="formulario">
+            <div class="form-group">
+                <label for="cantidad">Cantidad a convertir:</label>
+                <input type="number" id="cantidad" placeholder="Ejemplo: 100" step="0.01" required>
+            </div>
+
+            <div class="form-group">
+                <label for="tasa">Tasa de cambio:</label>
+                <input type="number" id="tasa" placeholder="Ejemplo: 0.85" step="0.0001" required>
+            </div>
+
+            <button type="submit">Calcular Conversión</button>
+        </form>
+
+        <div class="result" id="resultado">
+            <div class="result-label">El resultado es</div>
+            <div class="result-value" id="valor-resultado">0.00</div>
+        </div>
+
+        <div class="info-box">
+            <strong>¿Cómo funciona?</strong><br>
+            El programa toma la cantidad y la multiplica por la tasa de cambio. Luego formatea el resultado a 2 decimales usando <code>toFixed(2)</code> en JavaScript.
+        </div>
+    </div>
+
+    <script>
+        // Obtener elementos del DOM
+        const formulario = document.getElementById('formulario');
+        const cantidadInput = document.getElementById('cantidad');
+        const tasaInput = document.getElementById('tasa');
+        const resultadoDiv = document.getElementById('resultado');
+        const valorResultado = document.getElementById('valor-resultado');
+
+        // Escuchar el envío del formulario
+        formulario.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Obtener valores del formulario y convertir a números
+            const cantidad = parseFloat(cantidadInput.value);
+            const tasa = parseFloat(tasaInput.value);
+
+            // Validar que los valores sean válidos
+            if (isNaN(cantidad) || isNaN(tasa) || cantidad < 0 || tasa < 0) {
+                alert('Por favor, ingresa valores numéricos válidos');
+                return;
+            }
+
+            // Calcular el resultado: cantidad × tasa
+            // Ejemplo: 100 × 0.85 = 85
+            const resultado = cantidad * tasa;
+
+            // Formatear a 2 decimales: toFixed(2) convierte a string con 2 decimales
+            // Ejemplo: 85 → "85.00"
+            const resultadoFormateado = resultado.toFixed(2);
+
+            // Mostrar resultado
+            valorResultado.textContent = resultadoFormateado;
+            resultadoDiv.style.display = 'block';
+        });
+    </script>
+</body>
+</html>

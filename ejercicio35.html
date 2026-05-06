@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 35: Convertidor de Tiempo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 100%;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #667eea;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #764ba2;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.8em;
+        }
+
+        .description {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            background-color: #f8f9ff;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border: 2px solid #ffa726;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .result-text {
+            color: #e65100;
+            font-size: 1.2em;
+            font-weight: 500;
+        }
+
+        .time-display {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .time-unit {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #ffa726;
+        }
+
+        .time-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #e65100;
+        }
+
+        .time-label {
+            font-size: 0.8em;
+            color: #bf360c;
+            margin-top: 5px;
+            font-weight: 600;
+        }
+
+        .info-box {
+            background-color: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-top: 30px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        code {
+            background-color: #e8eaf6;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Volver al inicio</a>
+
+        <h1>Ejercicio 35: Convertidor de Tiempo</h1>
+        <p class="description">Convierte una cantidad de segundos en formato legible: horas, minutos y segundos restantes.</p>
+
+        <form id="formulario">
+            <div class="form-group">
+                <label for="segundos">Número de segundos:</label>
+                <input type="number" id="segundos" placeholder="Ejemplo: 3661" min="0" required>
+            </div>
+
+            <button type="submit">Convertir Tiempo</button>
+        </form>
+
+        <div class="result" id="resultado">
+            <div class="result-text" id="resultado-texto"></div>
+            <div class="time-display">
+                <div class="time-unit">
+                    <div class="time-value" id="horas">0</div>
+                    <div class="time-label">Horas</div>
+                </div>
+                <div class="time-unit">
+                    <div class="time-value" id="minutos">0</div>
+                    <div class="time-label">Minutos</div>
+                </div>
+                <div class="time-unit">
+                    <div class="time-value" id="segs">0</div>
+                    <div class="time-label">Segundos</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <strong>¿Cómo funciona?</strong><br>
+            Usa división entera (<code>/</code>) y módulo (<code>%</code>):<br>
+            • Horas: <code>segundos / 3600</code><br>
+            • Minutos: <code>(segundos % 3600) / 60</code><br>
+            • Segundos: <code>segundos % 60</code>
+        </div>
+    </div>
+
+    <script>
+        // Obtener elementos del DOM
+        const formulario = document.getElementById('formulario');
+        const segundosInput = document.getElementById('segundos');
+        const resultadoDiv = document.getElementById('resultado');
+        const resultadoTexto = document.getElementById('resultado-texto');
+        const horasDisplay = document.getElementById('horas');
+        const minutosDisplay = document.getElementById('minutos');
+        const segsDisplay = document.getElementById('segs');
+
+        // Escuchar el envío del formulario
+        formulario.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Obtener valor del formulario y convertir a número entero
+            let totalSegundos = parseInt(segundosInput.value);
+
+            // Validar que sea un número válido
+            if (isNaN(totalSegundos) || totalSegundos < 0) {
+                alert('Por favor, ingresa un número válido de segundos');
+                return;
+            }
+
+            // Calcular horas: dividir por 3600 (segundos en una hora)
+            // Math.floor redondea hacia abajo
+            // Ejemplo: 3661 / 3600 = 1.019... → Math.floor = 1
+            const horas = Math.floor(totalSegundos / 3600);
+
+            // Calcular minutos: primero obtenemos los segundos restantes después de quitar las horas
+            // totalSegundos % 3600 da los segundos "sobrantes" después de las horas completas
+            // Ejemplo: 3661 % 3600 = 61 (los 61 segundos restantes)
+            // Luego dividimos entre 60 para obtener minutos
+            const minutosRestantes = Math.floor((totalSegundos % 3600) / 60);
+
+            // Calcular segundos restantes: módulo 60 da los segundos "sobrantes" 
+            // después de completar los minutos
+            // Ejemplo: 3661 % 60 = 1 (el segundo sobrante)
+            const segundosRestantes = totalSegundos % 60;
+
+            // Actualizar los displays con los valores calculados
+            horasDisplay.textContent = horas;
+            minutosDisplay.textContent = minutosRestantes;
+            segsDisplay.textContent = segundosRestantes;
+
+            // Crear texto descriptivo
+            resultadoTexto.textContent = `${totalSegundos} segundos corresponden a ${horas}h, ${minutosRestantes}m y ${segundosRestantes}s`;
+
+            // Mostrar resultado
+            resultadoDiv.style.display = 'block';
+        });
+    </script>
+</body>
+</html>
